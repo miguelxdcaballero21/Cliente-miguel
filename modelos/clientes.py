@@ -7,7 +7,7 @@ class ClienteBase(BaseModel):
     descripcion: str
 
 
-class ClienteCrear(ClienteBase):
+class Clienteeditar(ClienteBase):
     pass
 
 
