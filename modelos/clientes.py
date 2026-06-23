@@ -12,4 +12,4 @@ class ClienteCrear(ClienteBase):
 
 
 class Cliente(ClienteBase):
-    id: int | None = None
+    id: int | None = None 
