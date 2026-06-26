@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from datetime import date
-
 # Clase base que contiene los datos principales
 # de una factura
 class FacturaBase(BaseModel):
@@ -17,11 +16,20 @@ class FacturaBase(BaseModel):
 
 # Clase utilizada para crear una nueva factura
 # Hereda todos los atributos de FacturaBase
-class FacturaCrear(FacturaBase):
-    pass
+class FacturaCrear(BaseModel):
+    fehca: str
+    vr_total: float
+    cliente: cliente
+ 
+class FacturaBase(BaseModel):
+     pass
     # "pass" indica que no se agregan más atributos
     # solo se reutiliza la estructura de FacturaBase
+class FacturaCrear(FacturaBase):
+    pass
 
+class FacturaEditar(FacturaBase):
+    pass
 
 # Clase que representa una factura completa
 # normalmente usada para mostrar información
