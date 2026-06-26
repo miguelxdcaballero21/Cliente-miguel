@@ -20,10 +20,14 @@ async def listar_clientes():
 async def listar_cliente(cliente_id: int):
 
     for i, obj_cliente in enumerate(lista_clientes):
+
         if obj_cliente.id == cliente_id:
             return obj_cliente
 
-    raise HTTPException(status_code=404, detail="Cliente no encontrado")
+    raise HTTPException(
+        status_code=400,
+        detail=f"El cliente con id {cliente_id} no existe."
+    )
 
 
 # endpoint para crear un cliente y agregar a la lista
@@ -71,48 +75,54 @@ async def listar_facturas():
     return lista_facturas
 
 
-@app.get("/facturas/{id_factura}", response_model=Factura)
-async def listar_factura(id_factura: int):
-    pass
+@app.get("/facturas/{factura_id}", response_model=Factura)
+async def listar_factura(factura_id: int):
 
+    for i, obj_factura in enumerate(lista_facturas):
 
-@app.post("/facturas/{id_factura}", response_model=Factura)
+        if obj_factura.id == factura_id:
+            return obj_factura
+
+    raise HTTPException(
+        status_code=400,
+        detail=f"La factura con id {factura_id} no existe."
+    )
+
+@app.post("/facturas", response_model=Factura)
 async def crear_factura(id_cliente: int, datos_factura: Factura):
-    pass
-
+    return {}
 
 @app.patch("/facturas/{id_factura}", response_model=Factura)
 async def editar_factura(id_factura: int, datos_factura: Factura):
-    pass
+    return{}
 
 
 @app.delete("/facturas/{id_factura}", response_model=Factura)
 async def eliminar_factura(id_factura: int):
-    pass
+    return{}
    
    
   # crear los endpoint para transacciones
 
 @app.get("/transacciones", response_model=list[Transaccion])
 async def listar_transacciones():
-    pass
-
+    return []
 
 @app.get("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def listar_transaccion(id_transaccion: int):
-    pass
+    return {}
 
 
 @app.post("/transacciones/{id_factura}", response_model=Transaccion)
 async def crear_transaccion(id_factura: int, datos_transaccion: Transaccion):
-    pass
+    return {}
 
 
 @app.patch("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def editar_transaccion(id_transaccion: int, datos_transaccion: Transaccion):
-    pass
+    return {}
 
 
 @app.delete("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def eliminar_transaccion(id_transaccion: int):
-    pass
+    return {}
