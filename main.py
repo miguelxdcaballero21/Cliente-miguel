@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from modelos.clientes import Cliente, ClienteCrear, ClienteEditar
 from modelos.facturas import Factura
 from modelos.transacciones import Transaccion
@@ -72,7 +72,7 @@ async def editar_cliente(cliente_id: int, datos_cliente: ClienteEditar):
 
 @app.get("/facturas", response_model=list[Factura])
 async def listar_facturas():
-    return lista_facturas
+    pass
 
 
 @app.get("/facturas/{factura_id}", response_model=Factura)
@@ -84,45 +84,45 @@ async def listar_factura(factura_id: int):
             return obj_factura
 
     raise HTTPException(
-        status_code=400,
+        status_code=status.HTTP_400_BAD_REQUEST,
         detail=f"La factura con id {factura_id} no existe."
     )
 
 @app.post("/facturas", response_model=Factura)
 async def crear_factura(id_cliente: int, datos_factura: Factura):
-    return {}
+    pass
 
 @app.patch("/facturas/{id_factura}", response_model=Factura)
 async def editar_factura(id_factura: int, datos_factura: Factura):
-    return{}
+    pass
 
 
 @app.delete("/facturas/{id_factura}", response_model=Factura)
 async def eliminar_factura(id_factura: int):
-    return{}
+    pass
    
    
   # crear los endpoint para transacciones
 
 @app.get("/transacciones", response_model=list[Transaccion])
 async def listar_transacciones():
-    return []
+    pass
 
 @app.get("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def listar_transaccion(id_transaccion: int):
-    return {}
+    pass
 
 
 @app.post("/transacciones/{id_factura}", response_model=Transaccion)
 async def crear_transaccion(id_factura: int, datos_transaccion: Transaccion):
-    return {}
+    pass
 
 
 @app.patch("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def editar_transaccion(id_transaccion: int, datos_transaccion: Transaccion):
-    return {}
+    pass
 
 
 @app.delete("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def eliminar_transaccion(id_transaccion: int):
-    return {}
+    pass

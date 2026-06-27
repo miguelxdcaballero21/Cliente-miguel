@@ -20,7 +20,7 @@ class TransaccionCrear(TransaccionBase):
     # "pass" significa que no se agrega nada nuevo
     # pero se mantiene la estructura heredada
 
-class TransacionEditar(TransaccionBase):
+class TransaccionEditar(TransaccionBase):
     pass
 # Clase que representa una transacción completa
 # normalmente usada para mostrar datos desde la base de datos
