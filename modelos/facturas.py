@@ -15,12 +15,22 @@ class FacturaBase(BaseModel):
     @property
     def vr_total(self) -> float:
 
-        total = 222
+        factura_id_actual = getattr(self, "id", None)
 
+        total_factura = 0.0
+
+        if not factura_id_actual or not self.transacciones:
+            return total_factura
+
+        # recorrer transacciones
         for transaccion in self.transacciones:
-            total += transaccion.valor
 
-        return total
+            if transaccion.factura_id == factura_id_actual:
+                total_factura += (
+                    transaccion.vr_unitario * transaccion.cantidad
+                )
+
+        return total_factura
 
 
 # crear factura
@@ -38,3 +48,4 @@ class Factura(FacturaBase):
 
     id: int | None = None
     cliente: Cliente
+    

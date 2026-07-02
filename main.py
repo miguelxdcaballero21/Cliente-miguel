@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException, status
 from modelos.clientes import Cliente, ClienteCrear, ClienteEditar
 from modelos.facturas import Factura, FacturaCrear, FacturaEditar
-from modelos.transacciones import Transaccion
+from modelos.transacciones import Transaccion,TransaccionCrear,TransaccionEditar
+
+
 
 app = FastAPI()
 
@@ -136,16 +138,54 @@ async def eliminar_factura(id_factura: int):
 
 @app.get("/transacciones", response_model=list[Transaccion])
 async def listar_transacciones():
-    pass
+    return lista_transacciones
 
 @app.get("/transacciones/{id_transaccion}", response_model=Transaccion)
 async def listar_transaccion(id_transaccion: int):
     pass
 
 
-@app.post("/transacciones/{id_factura}", response_model=Transaccion)
-async def crear_transaccion(id_factura: int, datos_transaccion: Transaccion):
-    pass
+@app.post("/transacciones/{factura_id}", response_model=Transaccion)
+async def crear_transaccion(
+    factura_id: int,
+    datos_transaccion: TransaccionCrear
+):
+
+    # buscar factura
+    factura_encontrada = None
+
+    for factura in lista_facturas:
+        if factura.id == factura_id:
+            factura_encontrada = factura
+
+    # validar factura
+    if not factura_encontrada:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"La factura con id {factura_id} no existe."
+        )
+
+    # convertir a diccionario
+    transaccion_dict = datos_transaccion.model_dump()
+
+    # agregar factura_id
+    transaccion_dict["factura_id"] = factura_id
+
+    # validar transaccion
+    transaccion_val = Transaccion.model_validate(
+        transaccion_dict
+    )
+
+    # generar id
+    transaccion_val.id = len(lista_transacciones) + 1
+
+    # guardar transaccion global
+    lista_transacciones.append(transaccion_val)
+
+    # agregar transaccion a la factura
+    factura_encontrada.transacciones.append(transaccion_val)
+
+    return transaccion_val
 
 
 @app.patch("/transacciones/{id_transaccion}", response_model=Transaccion)

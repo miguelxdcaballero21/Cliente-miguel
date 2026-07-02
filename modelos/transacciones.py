@@ -8,10 +8,7 @@ class TransaccionBase(BaseModel):
 
     # Valor unitario de cada producto
     vr_unitario: float
-
-    # ID de la factura a la que pertenece la transacción
-    factura_id: int
-
+    
 
 # Clase utilizada para crear una nueva transacción
 # Hereda todos los atributos de TransaccionBase
@@ -28,4 +25,5 @@ class Transaccion(TransaccionBase):
 
     # ID único de la transacción
     # Puede ser entero o None si aún no existe
+    factura_id: int
     id: int | None = None
