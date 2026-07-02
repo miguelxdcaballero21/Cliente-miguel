@@ -1,24 +1,40 @@
-from datetime import date
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 from modelos.clientes import Cliente
+from modelos.transacciones import Transaccion
+from datetime import datetime
 
-# Clase base que contiene los datos principales
-# de una factura
+
+# datos base
 class FacturaBase(BaseModel):
 
-    fecha: date
-    vr_total: float
-    cliente: Cliente
+    fecha: datetime = datetime.now()
+    transacciones: list[Transaccion] = []
 
-# Crear factura
+
+    @computed_field
+    @property
+    def vr_total(self) -> float:
+
+        total = 222
+
+        for transaccion in self.transacciones:
+            total += transaccion.valor
+
+        return total
+
+
+# crear factura
 class FacturaCrear(FacturaBase):
     pass
- 
-# Editar factura
+
+
+# editar factura
 class FacturaEditar(FacturaBase):
     pass
 
-# Modelo completo de factura
+
+# factura completa
 class Factura(FacturaBase):
 
     id: int | None = None
+    cliente: Cliente

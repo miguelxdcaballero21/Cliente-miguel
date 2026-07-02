@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, status
 from modelos.clientes import Cliente, ClienteCrear, ClienteEditar
-from modelos.facturas import Factura
+from modelos.facturas import Factura, FacturaCrear, FacturaEditar
 from modelos.transacciones import Transaccion
 
 app = FastAPI()
@@ -72,7 +72,7 @@ async def editar_cliente(cliente_id: int, datos_cliente: ClienteEditar):
 
 @app.get("/facturas", response_model=list[Factura])
 async def listar_facturas():
-    pass
+    return lista_facturas
 
 
 @app.get("/facturas/{factura_id}", response_model=Factura)
@@ -88,9 +88,39 @@ async def listar_factura(factura_id: int):
         detail=f"La factura con id {factura_id} no existe."
     )
 
-@app.post("/facturas", response_model=Factura)
-async def crear_factura(id_cliente: int, datos_factura: Factura):
-    pass
+@app.post("/facturas/{cliente_id}", response_model=Factura)
+async def crear_factura(cliente_id: int, datos_factura: FacturaCrear):
+
+    cliente_encontrado = None
+
+    # buscar cliente
+    for cliente in lista_clientes:
+        if cliente.id == cliente_id:
+            cliente_encontrado = cliente
+
+    # validar cliente
+    if cliente_encontrado is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"El cliente con id {cliente_id} no existe."
+        )
+
+    # convertir datos a diccionario
+    factura_dict = datos_factura.model_dump()
+
+    # agregar cliente
+    factura_dict["cliente"] = cliente_encontrado
+
+    # validar factura
+    factura_val = Factura.model_validate(factura_dict)
+
+    # generar id
+    factura_val.id = len(lista_facturas) + 1
+
+    # guardar factura
+    lista_facturas.append(factura_val)
+
+    return factura_val
 
 @app.patch("/facturas/{id_factura}", response_model=Factura)
 async def editar_factura(id_factura: int, datos_factura: Factura):
