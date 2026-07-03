@@ -1,190 +1,30 @@
-# Proyecto FastAPI - miguel
-
-## Información del Aprendiz
-
-* Nombre: Miguel Caballero
-* Programa: ADSO
-* Tecnología utilizada:
-
-  * Python
-  * FastAPI
-  * Git
-  * GitHub
-
----
-
-# Descripción del Proyecto
-
-Este proyecto consiste en la creación de una API utilizando FastAPI.
-
-La aplicación permite ejecutar un servidor local y crear endpoints para responder solicitudes HTTP.
-
----
-
-# Creación del Entorno Virtual
-
-Se creó un entorno virtual para aislar las dependencias del proyecto.
-
-Comando utilizado:
-
-```bash
-python3 -m venv .mi_env
-```
-
-Activación del entorno virtual en Git Bash:
-
-```bash
-source .mi_env/Scripts/activate
-```
-
-Cuando el entorno está activo aparece:
-
-```bash
-(.mi_env)
-```
-
----
-
-# Instalación de FastAPI
-
-Comando utilizado:
-
-```bash
-pip install "fastapi[standard]"
-```
-
-Descripción:
-Se instaló FastAPI junto con sus dependencias necesarias para el desarrollo.
-
----
-
-# Archivo Principal
-
-Archivo creado:
-
-```bash
-main.py
-```
-
----
-
-# Código Principal
-
-```python
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def inicio():
-    return {"mensaje": "Hola mundo"}
-```
-
----
-
-# Ejecución del Servidor
-
-Comando utilizado:
-
-```bash
-fastapi dev main.py
-```
-
-o también:
-
-```bash
-uvicorn main:app --reload
-```
-
----
-
-# Endpoint Principal
-
-Ruta:
-
-```bash
-/
-```
-
-Respuesta esperada:
-
-```json
-{
-  "mensaje": "Hola mundo"
-}
-```
-
----
-
-# Pruebas del Proyecto
-
-Abrir en el navegador:
-
-```bash
-http://127.0.0.1:8000
-```
-
-Documentación automática de FastAPI:
-
-```bash
-http://127.0.0.1:8000/docs
-```
-
----
-
-# Comandos Git Utilizados
-
-## Inicializar repositorio
-
-```bash
-git init
-```
-
-## Verificar estado
-
-```bash
-git status
-```
-
-## Agregar archivos
-
-```bash
-git add .
-```
-
-## Crear commit
-
-```bash
-git commit -m "Nuevo proyecto FastAPI"
-```
-
-## Subir cambios a GitHub
-
-```bash
-git push origin main
-```
-
----
-
-# Archivos del Proyecto
-
-* `main.py`
-* `requirements.txt`
-* `.gitignore`
-* `README.md`
-
----
-
-# Dependencias
-
-El proyecto utiliza las siguientes dependencias:
-
-* FastAPI
-* Uvicorn
-* Pydantic
-
-Estas dependencias quedan registradas en:
-
-```bash
-requirements.txt
-```
+Descripción del Proyecto
+
+Este proyecto fue desarrollado utilizando FastAPI, un framework moderno de Python diseñado para la creación rápida de APIs. El objetivo principal fue aprender el funcionamiento de los servicios web, la creación de endpoints y la gestión de peticiones HTTP utilizando buenas prácticas de desarrollo.
+
+Durante el proceso se configuró un entorno virtual para aislar las dependencias del proyecto y mantener un entorno de trabajo organizado. Posteriormente, se instaló FastAPI junto con herramientas complementarias como Uvicorn, que permite ejecutar el servidor localmente.
+
+La aplicación incluye endpoints básicos capaces de responder solicitudes HTTP y mostrar información en formato JSON. Además, FastAPI genera automáticamente documentación interactiva para probar cada ruta creada, facilitando el desarrollo y la validación de la API.
+
+También se implementó el uso de Git y GitHub para el control de versiones, permitiendo registrar cambios mediante commits y mantener el proyecto almacenado en un repositorio remoto.
+
+Proceso de Desarrollo
+Creación del entorno virtual para aislar dependencias.
+Instalación de FastAPI y librerías necesarias.
+Creación del archivo principal main.py.
+Configuración de la aplicación utilizando FastAPI.
+Creación de endpoints para responder solicitudes HTTP.
+Ejecución del servidor local mediante Uvicorn.
+Pruebas de funcionamiento desde el navegador y Swagger Docs.
+Uso de Git para el control de versiones.
+Subida del proyecto al repositorio de GitHub.
+Funcionalidades del Proyecto
+Ejecución de servidor local.
+Creación de endpoints GET.
+Respuestas en formato JSON.
+Documentación automática con Swagger.
+Organización de dependencias mediante entorno virtual.
+Control de versiones con Git y GitHub.
+Objetivo del Proyecto
+
+Fortalecer conocimientos en desarrollo backend utilizando Python y FastAPI, comprendiendo la estructura básica de una API y el manejo de herramientas utilizadas en entornos reales de desarrollo
