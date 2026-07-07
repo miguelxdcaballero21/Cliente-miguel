@@ -1,1 +1,3 @@
 fastapi[standard]>=0.137.2
+sqlmodel>=0.0.39
+#sqlite extension para ver la base de datos
