@@ -1,14 +1,21 @@
 from fastapi import APIRouter, HTTPException, status
 
-from ..modelos.facturas import Factura, FacturaCrear, FacturaEditar
+from app.modelos.clientes import Cliente
+
+from ..modelos.facturas import Factura, FacturaCrear, FacturaEditar, FacturaLeer
 from app.listas import lista_facturas, lista_clientes
+from ..conexion_bd import Sesion_dependencia
+from sqlmodel import select
 
 rutas_facturas = APIRouter()
 
 
 # LISTAR FACTURAS
-@rutas_facturas.get("/facturas", response_model=list[Factura])
-async def listar_facturas():
+@rutas_facturas.get("/facturas", response_model=list[FacturaLeer])
+async def listar_facturas(sesion: Sesion_dependencia):
+    #select * from factura 
+    consulta = select(Factura)
+    lista_facturas = sesion.exec(consulta).all()
     return lista_facturas
 
 
@@ -25,32 +32,28 @@ async def listar_factura(factura_id: int):
         detail=f"La factura con id {factura_id} no existe."
     )
 
-
 # CREAR FACTURA
 @rutas_facturas.post("/facturas/{cliente_id}", response_model=Factura)
-async def crear_factura(cliente_id: int, datos_factura: FacturaCrear):
+async def crear_factura(cliente_id: int, datos_factura: FacturaCrear, sesion: Sesion_dependencia):
 
-    cliente_encontrado = None
+    
+    cliente_encontrado = sesion.get(Cliente, cliente_id)
 
-    for cliente in lista_clientes:
-        if cliente.id == cliente_id:
-            cliente_encontrado = cliente
-            break
-
-    if cliente_encontrado is None:
+    if not cliente_encontrado:
         raise HTTPException(
             status_code=404,
             detail=f"El cliente con id {cliente_id} no existe."
         )
 
+#validar datos de la factura json pasar dict
     factura_dict = datos_factura.model_dump()
-    factura_dict["cliente"] = cliente_encontrado
-
+    factura_dict ["cliente_id"] = cliente_id
     factura_val = Factura.model_validate(factura_dict)
-
-    factura_val.id = len(lista_facturas) + 1
-
-    lista_facturas.append(factura_val)
+    
+    #guardar en bd
+    sesion.add(factura_val)
+    sesion.commit()
+    sesion.refresh(factura_val)
 
     return factura_val
 

@@ -8,6 +8,7 @@ class TransaccionBase(SQLModel):
     cantidad: int = Field(default=0)
     # Valor unitario de cada producto
     vr_unitario: float = Field(default=0.0)
+    descripcion: str = Field(default=None)
     
 
 # Clase utilizada para crear una nueva transacción
