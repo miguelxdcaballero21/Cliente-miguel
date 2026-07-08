@@ -8,32 +8,20 @@ from datetime import datetime
 # datos base
 class FacturaBase(SQLModel):
 
-    fecha: str = Field(default=datetime.now())
-    #transacciones: list[Transaccion] = []
-
+    fecha: datetime = Field(default_factory=datetime.now)
 
     @computed_field
     @property
     def vr_total(self) -> float:
+        total = 0.0
 
-        #factura_id_actual = getattr(self, "id", None)
+        if not hasattr(self, "transacciones") or not self.transacciones:
+           return total
 
-        #total_factura = 0.0
+        for transaccion in self.transacciones:
+            total += transaccion.cantidad * transaccion.vr_unitario
 
-        #if not factura_id_actual or not self.transacciones:
-           # return total_factura
-
-        # recorrer transacciones
-        #for transaccion in self.transacciones:
-
-         #   if transaccion.factura_id == factura_id_actual:
-          #      total_factura += (
-           #         transaccion.vr_unitario * transaccion.cantidad
-          #      )
-
-        return 0.0
-
-
+        return total
 # crear factura
 class FacturaCrear(FacturaBase):
     pass
@@ -47,6 +35,11 @@ class FacturaEditar(FacturaBase):
 class FacturaLeer(FacturaBase):
     id: int 
     cliente: ClienteLeer
+    #transacciones:list[Transaccion] = [] 
+    
+class FacturaLeerCompuesta(FacturaLeer):
+    transacciones:list[Transaccion] = [] 
+    
 
 # factura completa
 class Factura(FacturaBase, table=True):
@@ -55,4 +48,5 @@ class Factura(FacturaBase, table=True):
     cliente_id: int = Field(default=None, foreign_key="cliente.id")
     #crear las relaciones virtuales no en la bd
     cliente : Cliente = Relationship(back_populates="factura") 
+    transacciones: list[Transaccion] = Relationship(back_populates="factura")
     

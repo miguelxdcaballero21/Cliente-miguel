@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from ..modelos.transacciones import Transaccion, TransaccionCrear, TransaccionEditar
 from ..modelos.facturas import Factura
-from app.listas import lista_transaccion, lista_facturas
+from ..listas import lista_transaccion, lista_facturas
 from ..conexion_bd import Sesion_dependencia
 from sqlmodel import select
 
@@ -32,7 +32,11 @@ async def listar_transaccion(id_transaccion: int):
 
 # crear transacción
 @rutas_transacciones.post("/transacciones/{factura_id}", response_model=Transaccion)
-async def crear_transaccion(factura_id: int, datos_transaccion: TransaccionCrear, sesion: Sesion_dependencia):
+async def crear_transaccion(
+    factura_id: int,
+    datos_transaccion: TransaccionCrear,
+    sesion: Sesion_dependencia
+):
     factura_encontrada = sesion.get(Factura, factura_id)
 
     if not factura_encontrada:
@@ -41,17 +45,11 @@ async def crear_transaccion(factura_id: int, datos_transaccion: TransaccionCrear
             detail=f"La factura con id {factura_id} no existe."
         )
 
-#validar datos de la transaccion json y pasamoa a dict
     transaccion_dict = datos_transaccion.model_dump()
     transaccion_dict["factura_id"] = factura_id
-    transaccion_val = Transaccion.model_validate(transaccion_dict)
-    
-    #id de la transaccion
-    transaccion_val.id = len(lista_transaccion) + 1
 
-    lista_transaccion.append(transaccion_val)
-    
-    #guardar
+    transaccion_val = Transaccion.model_validate(transaccion_dict)
+
     sesion.add(transaccion_val)
     sesion.commit()
     sesion.refresh(transaccion_val)

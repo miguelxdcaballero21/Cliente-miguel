@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.modelos.clientes import Cliente
 
-from ..modelos.facturas import Factura, FacturaCrear, FacturaEditar, FacturaLeer
+from ..modelos.facturas import Factura, FacturaCrear, FacturaEditar, FacturaLeer, FacturaLeerCompuesta
 from app.listas import lista_facturas, lista_clientes
 from ..conexion_bd import Sesion_dependencia
 from sqlmodel import select
@@ -11,7 +11,7 @@ rutas_facturas = APIRouter()
 
 
 # LISTAR FACTURAS
-@rutas_facturas.get("/facturas", response_model=list[FacturaLeer])
+@rutas_facturas.get("/facturas", response_model=list[FacturaLeerCompuesta])
 async def listar_facturas(sesion: Sesion_dependencia):
     #select * from factura 
     consulta = select(Factura)
@@ -33,11 +33,13 @@ async def listar_factura(factura_id: int):
     )
 
 # CREAR FACTURA
-@rutas_facturas.post("/facturas/{cliente_id}", response_model=Factura)
+@rutas_facturas.post("/facturas/{cliente_id}")
 async def crear_factura(cliente_id: int, datos_factura: FacturaCrear, sesion: Sesion_dependencia):
 
-    
+    print("1. Entró al método")
+
     cliente_encontrado = sesion.get(Cliente, cliente_id)
+    print("2. Cliente encontrado:", cliente_encontrado)
 
     if not cliente_encontrado:
         raise HTTPException(
@@ -45,15 +47,21 @@ async def crear_factura(cliente_id: int, datos_factura: FacturaCrear, sesion: Se
             detail=f"El cliente con id {cliente_id} no existe."
         )
 
-#validar datos de la factura json pasar dict
     factura_dict = datos_factura.model_dump()
-    factura_dict ["cliente_id"] = cliente_id
+    factura_dict["cliente_id"] = cliente_id
+    print("3. Dict:", factura_dict)
+
     factura_val = Factura.model_validate(factura_dict)
-    
-    #guardar en bd
+    print("4. Modelo:", factura_val)
+
     sesion.add(factura_val)
+    print("5. Antes del commit")
+
     sesion.commit()
+    print("6. Después del commit")
+
     sesion.refresh(factura_val)
+    print("7. Después del refresh")
 
     return factura_val
 

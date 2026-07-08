@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional
 # Clase base que contiene los atributos principales
 # de una transacción o detalle de factura
 class TransaccionBase(SQLModel):
@@ -22,9 +23,17 @@ class TransaccionEditar(TransaccionBase):
     pass
 # Clase que representa una transacción completa
 # normalmente usada para mostrar datos desde la base de datos
+
+class TransaccionLeer(TransaccionBase):
+    id: int
 class Transaccion(TransaccionBase, table=True):
 
     # ID único de la transacción
     # Puede ser entero o None si aún no existe
     id: int | None = Field(default=None, primary_key=True)
     factura_id: int | None = Field(default=None, foreign_key="factura.id")
+    
+    
+    #relacion virtual 
+    #optional
+    factura: Optional["Factura"] = Relationship(back_populates="transacciones")
